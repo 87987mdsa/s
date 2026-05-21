@@ -1,9 +1,17 @@
 local venezuela = Instance.new("RemoteEvent").FireServer
+local isHooking = false -- Bandera para evitar recursión
+
 hookfunction(venezuela, newcclosure(function(self, ...)
+    if isHooking then return venezuela(self, ...) end -- Si ya estamos dentro, no hagas nada extra
+    
     if not checkcaller() and self.Parent and self.Parent:IsA("Service") then
         return nil
     end
-    return venezuela(self, ...)
+    
+    isHooking = true
+    local success, result = pcall(venezuela, self, ...)
+    isHooking = false
+    
+    if not success then return nil end
+    return result
 end))
-
-print("bypass")
