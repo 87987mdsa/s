@@ -1,0 +1,9 @@
+local venezuela = Instance.new("RemoteEvent").FireServer
+hookfunction(venezuela, newcclosure(function(self, ...)
+    if not checkcaller() and self.Parent and self.Parent:IsA("Service") then
+        return nil
+    end
+    return venezuela(self, ...)
+end))
+
+print("bypass")
