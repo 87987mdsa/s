@@ -1,8 +1,12 @@
 local venezuela = Instance.new("RemoteEvent").FireServer
 local isHooking = false -- Bandera para evitar recursión
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local VirtualUser = game:GetService("VirtualUser")
+local currentCamera = game.Workspace.CurrentCamera
 
 hookfunction(venezuela, newcclosure(function(self, ...)
-    if isHooking then return venezuela(self, ...) end -- Si ya estamos dentro, no hagas nada extra
+    if isHooking then return venezuela(self, ...) end
     
     if not checkcaller() and self.Parent and self.Parent:IsA("Service") then
         return nil
@@ -15,3 +19,12 @@ hookfunction(venezuela, newcclosure(function(self, ...)
     if not success then return nil end
     return result
 end))
+player.Idled:Connect(function()
+	VirtualUser:Button2Down(Vector2.zero, currentCamera.CFrame)
+	task.wait(1)
+	VirtualUser:Button2Up(Vector2.zero, currentCamera.CFrame)
+	
+	print("Player Successfully UnIdled.")
+end)
+
+print("Anti AFK Active")
